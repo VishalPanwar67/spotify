@@ -66,22 +66,55 @@ const register = async (req, res) => {
   }
 };
 
-const login = (req, res) => {
-  res.json({
-    data: "you are login ",
-  });
+const login = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
+
+    if (!user || !isPasswordCorrect) {
+      console.log(`Invalid username or password => ${username}`);
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    generateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      email: user.email,
+      likedSongs: user.likedSongs,
+      likedPlaylists: user.likedPlaylists,
+      subscribedArtists: user.subscribedArtists,
+    });
+  } catch (error) {
+    console.log(`Unable to log in: ${error}`);
+    return res.status(500).json({ error: "Unable to log in - Catch Block" });
+  }
 };
 
 const logout = (req, res) => {
-  res.json({
-    data: "you are logout",
-  });
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.log(`Unable to log out: ${error}`);
+    return res.status(500).json({ error: "Unable to log out - Catch Block" });
+  }
 };
 
-const getMe = (req, res) => {
-  res.json({
-    data: "you are getMe",
-  });
+const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(`Unable to get user: ${error}`);
+    return res.status(500).json({ error: "Unable to get user - Catch Block" });
+  }
 };
 
 export { testEndPoints, register, login, logout, getMe };

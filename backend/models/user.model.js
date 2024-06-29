@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     private: true,
   },
+  profilePicture: {
+    type: String,
+    default: "",
+  },
+  coverPicture: {
+    type: String,
+    default: "",
+  },
   likedSongs: {
     // We will change this to array later
     type: String,

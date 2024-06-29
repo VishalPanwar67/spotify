@@ -5,6 +5,9 @@ const PlaylistSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+  },
   thumbnail: {
     type: String,
     required: true,

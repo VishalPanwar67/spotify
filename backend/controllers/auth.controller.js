@@ -117,4 +117,94 @@ const getMe = async (req, res) => {
   }
 };
 
-export { testEndPoints, register, login, logout, getMe };
+const getUserProfile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id).select("-password");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(`Unable to get user Profile: ${error}`);
+    return res.status(500).json({ error: "Unable to get user profile" });
+  }
+};
+const updateUserProfile = async (req, res) => {
+  const { firstName, lastName, username, currentPassword, newPassword } =
+    req.body;
+  let { profilePicture, coverPicture } = req.body;
+
+  const userId = req.user._id;
+
+  try {
+    let user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (
+      (!newPassword && currentPassword) ||
+      (newPassword && !currentPassword)
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Please enter both current and new password" });
+    }
+    if (newPassword && currentPassword) {
+      const isPasswordCorrect = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+      if (!isPasswordCorrect) {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+      if (newPassword === currentPassword) {
+        return res.status(400).json({
+          error: "New password must be different from current password",
+        });
+      }
+      if (newPassword.length < 6) {
+        return res
+          .status(400)
+          .json({ error: "New password must be at least 6 characters long" });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+    if (profilePicture) {
+      if (user.profilePicture) {
+        const imageId = user.profileImg.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imageId);
+      }
+      const uploadResponse = await cloudinary.uploader.upload(profileImg);
+      profileImg = uploadResponse.secure_url;
+    }
+    if (coverPicture) {
+      if (user.coverPicture) {
+        const imageId = user.coverPicture.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(imageId);
+      }
+      const uploadResponse = await cloudinary.uploader.upload(coverPicture);
+      coverPicture = uploadResponse.secure_url;
+    }
+
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.username = username || user.username;
+    user.profilePicture = profilePicture || user.profilePicture;
+    user.coverPicture = coverPicture || user.coverPicture;
+    user = await user.save();
+    user.password = null;
+    res.status(200).json({ message: "Profile updated successfully" });
+  } catch (error) {
+    console.log(`Unable to update user profile: ${error}`);
+    res.status(500).json({ error: "Unable to update user profile" });
+  }
+};
+
+export {
+  testEndPoints,
+  register,
+  login,
+  logout,
+  getMe,
+  getUserProfile,
+  updateUserProfile,
+};

@@ -1,6 +1,10 @@
 import { User } from "../models/index.js";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
+
+
+
 const testEndPoints = (req, res) => {
   //   res.json({
   //     data: "This is the test router point",
@@ -170,11 +174,11 @@ const updateUserProfile = async (req, res) => {
     }
     if (profilePicture) {
       if (user.profilePicture) {
-        const imageId = user.profileImg.split("/").pop().split(".")[0];
+        const imageId = user.profilePicture.split("/").pop().split(".")[0];
         await cloudinary.uploader.destroy(imageId);
       }
-      const uploadResponse = await cloudinary.uploader.upload(profileImg);
-      profileImg = uploadResponse.secure_url;
+      const uploadResponse = await cloudinary.uploader.upload(profilePicture);
+      profilePicture = uploadResponse.secure_url;
     }
     if (coverPicture) {
       if (user.coverPicture) {

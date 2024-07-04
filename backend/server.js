@@ -1,30 +1,42 @@
 import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser"; // to get cookies from req object and set cookies in res object
+import { v2 as cloudinary } from "cloudinary"; //for using cloudinary
 
-import { authRoutes } from "./routes/index.routes.js";
+import { authRoutes, songRoutes } from "./routes/index.routes.js";
 import connectMongoDB from "./db/connectMongoDB.js";
 
+//configs
 dotenv.config({
   path: "././.env",
 }); //dotevn file configed
 const PORT = process.env.PORT;
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 const app = express();
+
+//middlewares
 app.use(express.json()); // to parse req.body
 app.use(urlencoded({ extended: true }));
 app.use(cookieParser()); // to get cookies from req object and set cookies in res object
 
+//routes
 app.get("/", (req, res) => {
   res.send("This is Spotify app");
 });
-
 app.use("/api/auth", authRoutes);
+app.use("/api/songs", songRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Example app listening on port ${PORT}`);
 // });
 
+//connect to mongoDB
 connectMongoDB()
   .then(() => {
     app.on("error", (error) => {

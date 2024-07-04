@@ -10,28 +10,27 @@ const SongSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    track: {
+    url: {
       type: String,
       required: true,
     },
     artist: {
       type: mongoose.Types.ObjectId,
-      ref: "Artist",
+      ref: "User",
       required: true,
-    },
-    album: {
-      type: String,
     },
     duration: {
       type: Number,
       required: true,
     },
-    genre: {
+    track: {
       type: String,
     },
-    url: {
+    album: {
       type: String,
-      required: true,
+    },
+    genre: {
+      type: String,
     },
   },
   { timestamps: true }

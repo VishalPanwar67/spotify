@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/Artist", artistRoutes);
 app.use("/api/album", albumRoutes);
-// app.use("/api/songs", songRoutes);
+app.use("/api/song", songRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Example app listening on port ${PORT}`);

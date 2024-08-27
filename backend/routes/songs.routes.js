@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
-
-import protectRoute from "../middlewares/protectRoute.js";
+import artistProtectRoute from "../middlewares/artistProtectRoute.js";
 import upload from "../middlewares/multerFileRoute.js";
 
 import {
@@ -15,10 +14,15 @@ router.get("/songTestEndPoints", (req, res) => {
   res.send("This test end point");
 });
 
-router.post("/createSong", protectRoute, upload.single("file"), createSong);
-router.get("/songs/:id", getSong);
-router.put("/songs/:id", updateSong);
-router.delete("/songs/:id", deleteSong);
+router.put(
+  "/createSong",
+  artistProtectRoute,
+  upload.single("file"),
+  createSong
+);
 router.get("/songs", getAllSongs);
+router.get("/:id", getSong);
+router.put("/:id", artistProtectRoute, updateSong);
+router.delete("/:id", artistProtectRoute, deleteSong);
 
 export default router;

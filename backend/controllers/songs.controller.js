@@ -1,67 +1,119 @@
-import { User, Song } from "../models/index.js";
+import { Song, Album } from "../models/index.js";
 import { v2 as cloudinary } from "cloudinary";
 
 import upload from "../middlewares/multerFileRoute.js";
+import path from "path";
 
 //create Songs
 const createSong = async (req, res) => {
-  const userId = req.user._id;
+  const artistID = req.artist._id;
   try {
-    const user = await User.findById(userId).select(
-      "-password -firstName -lastName -email -profilePicture -coverPicture"
-    );
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    const { name, thumbnail, artist, album, genre, url, track, duration } =
-      req.body;
-
-    if (!name || !thumbnail || !url) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
-
-    const thumbnailResult = await cloudinary.uploader.upload(thumbnail, {
-      resource_type: "auto",
-      folder: "thumbnails",
-    });
-
-    const urlResult = await cloudinary.uploader.upload(url, {
-      resource_type: "auto",
-      folder: "url",
-    });
-    // console.log("urlResult ==> ", urlResult);
-    // console.log("song duration => ", urlResult.duration);
-
-    const newSong = new Song({
-      name,
-      thumbnail: thumbnailResult.secure_url,
-      track,
-      artist: user,
+    const { title, duration, album } = req.body;
+    // const fileUrl = req.file.path;
+    const { fileUrl } = req.body;
+    const song = new Song({
+      title,
+      duration,
+      fileUrl,
       album,
-      duration: urlResult.duration,
-      genre,
-      url: urlResult.secure_url,
+      artist: artistID,
     });
-    const savedSong = await newSong.save();
-    res.status(201).json({
-      savedSong,
-    });
+
+    await song.save();
+
+    const albumUpdate = await Album.findById(album);
+    albumUpdate.songs.push(song._id);
+    await albumUpdate.save();
+    res.status(201).json(song);
   } catch (error) {
-    console.log("unable to create song: catch Block => ", error);
-    res.status(500).json({ error: "Unable to create song" });
+    console.log(`Error in createSong: ${error}`);
+    return res.status(500).json({ error: "Unable to create song" });
+  }
+};
+
+//Get all songs
+const getAllSongs = async (req, res) => {
+  try {
+    const songs = await Song.find().populate("album").populate("artist");
+    res.status(200).json(songs);
+  } catch (error) {
+    console.log(`Error in getAllSongs: ${error}`);
+    return res.status(500).json({ error: "Unable to get all songs" });
   }
 };
 
 //getSongs
-const getSong = async (req, res) => {};
+const getSong = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const song = await Song.findById(id).populate("album").populate("artist");
+    if (!song) {
+      return res.status(404).json({ error: "Song not found" });
+    }
+    res.status(200).json(song);
+  } catch (error) {
+    console.log(`Error in getSong: ${error}`);
+    return res.status(500).json({ error: "Unable to get song" });
+  }
+};
 
 //update Songs
-const updateSong = async (req, res) => {};
+const updateSong = async (req, res) => {
+  const ArtistID = req.artist._id;
+  const id = req.params.id;
+  const { title, duration, album, artist } = req.body;
+  let { fileUrl } = req.body;
+  try {
+    let song = await Song.findById(id);
+    if (!song) return res.status(404).json({ error: "song not found" });
+    if (ArtistID.toString() !== song.artist.toString()) {
+      return res.status(404).json({ error: "Unauthorized" });
+    }
+    if (fileUrl) {
+      if (song.fileUrl) {
+        cloudinary.uploader.destroy(song.fileUrl);
+      }
+    }
+    song = await Song.findByIdAndUpdate(
+      id,
+      {
+        title,
+        duration,
+        album,
+        artist,
+        fileUrl,
+      },
+      { new: true }
+    );
+    res.status(200).json(song);
+  } catch (error) {
+    console.log(`Error in updateSong: ${error}`);
+    return res.status(500).json({ error: "Unable to update song" });
+  }
+};
 
 //delete Songs
-const deleteSong = async (req, res) => {};
+const deleteSong = async (req, res) => {
+  const id = req.params.id;
+  const ArtistID = req.artist._id;
+  try {
+    const song = await Song.findById(id);
+    if (!song) return res.status(404).json({ error: "song not found" });
 
-//Get all songs
-const getAllSongs = async (req, res) => {};
+    if (ArtistID.toString() !== song.artist.toString()) {
+      return res.status(404).json({ error: "Unauthorized" });
+    }
+
+    await Album.findByIdAndUpdate(song.album, {
+      $pull: { songs: song._id },
+    });
+
+    await Song.findByIdAndDelete(id);
+    res.status(200).json(song);
+  } catch (error) {
+    console.log(`Error in deleteSong: ${error}`);
+    return res.status(500).json({ error: "Unable to delete song" });
+  }
+};
 
 export { createSong, getSong, updateSong, deleteSong, getAllSongs };

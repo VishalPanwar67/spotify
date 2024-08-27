@@ -1,14 +1,14 @@
 import multer from "multer";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+// import path from "path";
 
 // Multer configuration for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Uploads directory
-  },
-  filename: function (req, file, cb) {
-    // Rename uploaded file (you can customize filename as needed)
-    cb(null, Date.now() + path.extname(file.originalname));
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "songs",
+    resource_type: "auto",
   },
 });
 

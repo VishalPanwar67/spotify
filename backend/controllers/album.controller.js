@@ -1,9 +1,9 @@
-import { Album } from "../models/index.js";
+import { Album, Artist } from "../models/index.js";
 import { v2 as cloudinary } from "cloudinary";
 
 const createAlbum = async (req, res) => {
   const ArtistID = req.artist._id;
-  console.log(req.artist._id + " " + typeof req.artist._id);
+  // console.log(req.artist._id + " " + typeof req.artist._id);
   try {
     const { title, releaseDate, coverImage, artist, songs } = req.body;
     // artist = ArtistID;
@@ -15,6 +15,11 @@ const createAlbum = async (req, res) => {
       songs,
     });
     await album.save();
+
+    const artistUpdate = await Artist.findById(ArtistID);
+    artistUpdate.albums.push(album._id);
+    await artistUpdate.save();
+
     res.status(201).json(album);
   } catch (error) {
     console.log(`Unable to create album: ${error}`);
@@ -82,10 +87,20 @@ const updateAlbum = async (req, res) => {
 };
 
 const deleteAlbum = async (req, res) => {
+  const ArtistID = req.artist._id;
   const id = req.params.id;
   try {
-    const album = await Album.findByIdAndDelete(id);
+    const album = await Album.findById(id);
     if (!album) return res.status(404).json({ error: "album not found" });
+
+    if (ArtistID.toString() !== album.artist.toString()) {
+      return res.status(404).json({ error: "Unauthorized" });
+    }
+    await Artist.findByIdAndUpdate(ArtistID, {
+      $pull: { albums: album._id },
+    });
+    await Album.findByIdAndDelete(id);
+
     res.status(200).json(album);
   } catch (error) {
     console.log(`Unable to delete album: ${error}`);

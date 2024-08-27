@@ -8,6 +8,7 @@ import {
   songRoutes,
   artistRoutes,
   albumRoutes,
+  playlistRoutes,
 } from "./routes/index.routes.js";
 import connectMongoDB from "./db/connectMongoDB.js";
 
@@ -38,6 +39,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/Artist", artistRoutes);
 app.use("/api/album", albumRoutes);
 app.use("/api/song", songRoutes);
+app.use("/api/playlist", playlistRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Example app listening on port ${PORT}`);

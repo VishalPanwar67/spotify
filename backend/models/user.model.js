@@ -40,6 +40,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  playlist: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Playlist",
+      // required: true,
+    },
+  ],
   subscribedArtists: {
     // We will change this to array later
     type: String,

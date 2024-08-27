@@ -3,8 +3,6 @@ import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
 
-
-
 const testEndPoints = (req, res) => {
   //   res.json({
   //     data: "This is the test router point",
@@ -59,6 +57,7 @@ const register = async (req, res) => {
         email: newUser.email,
         likedSongs: newUser.likedSongs,
         likedPlaylists: newUser.likedPlaylists,
+        playlist: newUser.playlist,
         subscribedArtists: newUser.subscribedArtists,
       });
     } else {

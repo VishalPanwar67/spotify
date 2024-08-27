@@ -3,20 +3,20 @@ import mongoose from "mongoose";
 const artistSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true,
+    required: [true, "First name is required"],
   },
   lastName: {
     type: String,
-    required: false,
+    required: [true, "lastName is required"],
   },
   stageName: {
     type: String,
-    required: true,
+    required: [true, "Stage name is required"],
     unique: true,
   },
   genre: {
     type: [String], // Multiple genres
-    // required: true,
+    required: [true, "At least one genre is required"],
   },
   bio: {
     type: String,
@@ -25,10 +25,24 @@ const artistSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
     default: "",
+    validate: {
+      validator: function (v) {
+        return /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
+      },
+      message: (props) =>
+        `${props.value} is not a valid URL for an image file!`,
+    },
   },
   coverPicture: {
     type: String,
     default: "",
+    validate: {
+      validator: function (v) {
+        return /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
+      },
+      message: (props) =>
+        `${props.value} is not a valid URL for an image file!`,
+    },
   },
   socialLinks: {
     type: [String],

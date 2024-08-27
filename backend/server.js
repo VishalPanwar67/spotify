@@ -3,7 +3,12 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser"; // to get cookies from req object and set cookies in res object
 import { v2 as cloudinary } from "cloudinary"; //for using cloudinary
 
-import { authRoutes, songRoutes, artistRoutes } from "./routes/index.routes.js";
+import {
+  authRoutes,
+  songRoutes,
+  artistRoutes,
+  albumRoutes,
+} from "./routes/index.routes.js";
 import connectMongoDB from "./db/connectMongoDB.js";
 
 //configs
@@ -30,8 +35,9 @@ app.get("/", (req, res) => {
   res.send("This is Spotify app");
 });
 app.use("/api/auth", authRoutes);
-// app.use("/api/songs", songRoutes);
 app.use("/api/Artist", artistRoutes);
+app.use("/api/album", albumRoutes);
+// app.use("/api/songs", songRoutes);
 
 // app.listen(PORT, () => {
 //   console.log(`Example app listening on port ${PORT}`);

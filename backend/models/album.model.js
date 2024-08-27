@@ -6,7 +6,8 @@ const albumSchema = new mongoose.Schema({
     required: true,
   },
   releaseDate: {
-    type: Date,
+    // type: Date,
+    type: String,
     required: true,
   },
   coverImage: {
@@ -16,7 +17,7 @@ const albumSchema = new mongoose.Schema({
   artist: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Artist",
-    required: true,
+    // required: true,
   },
   songs: [
     {

@@ -35,6 +35,10 @@ const albumSchema = new mongoose.Schema({
   ],
 });
 
+albumSchema.index({
+  title: "text",
+});
+
 const Album = mongoose.model("Album", albumSchema);
 
 export default Album;

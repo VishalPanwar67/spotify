@@ -34,6 +34,10 @@ const songSchema = new mongoose.Schema({
   },
 });
 
+songSchema.index({
+  title: "text",
+});
+
 const Song = mongoose.model("Song", songSchema);
 
 export default Song;

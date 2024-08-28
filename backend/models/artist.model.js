@@ -56,6 +56,21 @@ const artistSchema = new mongoose.Schema({
   ],
 });
 
+artistSchema.index(
+  {
+    stageName: "text",
+    firstName: "text",
+    lastName: "text",
+  },
+  {
+    weights: {
+      stageName: 5, // Higher weight to stageName for better relevance
+      firstName: 3,
+      lastName: 1,
+    },
+  }
+);
+
 const Artist = mongoose.model("Artist", artistSchema);
 
 export default Artist;

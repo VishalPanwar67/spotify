@@ -35,6 +35,13 @@ const songSchema = new mongoose.Schema({
     ref: "Artist",
     required: true,
   },
+  likedBy: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
 });
 
 songSchema.index({

@@ -12,6 +12,7 @@ import {
   getUserProfile,
   updateUserProfile,
   subscribeUnsubscribe,
+  likeUnlikeSong,
 } from "../controllers/auth.controller.js";
 
 router.post("/register", register);
@@ -29,5 +30,6 @@ router.put(
   updateUserProfile
 );
 router.get("/subscribe/:id", protectRoute, subscribeUnsubscribe);
+router.get("/like/:id", protectRoute, likeUnlikeSong);
 
 export default router;

@@ -1,4 +1,4 @@
-import { User, Artist, Notification } from "../models/index.js";
+import { User, Artist, Notification, Song } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
@@ -263,6 +263,73 @@ const subscribeUnsubscribe = async (req, res) => {
   }
 };
 
+const likeUnlikeSong = async (req, res) => {
+  const userId = req.user._id;
+  const songId = req.params.id;
+  try {
+    const song = await Song.findById(songId);
+    if (!song) return res.status(404).json({ error: "Song not found" });
+    const userLikedSong = song.likedBy.includes(userId);
+    if (userLikedSong) {
+      //unLike
+      await Song.findByIdAndUpdate(
+        songId,
+        {
+          $pull: { likedBy: userId },
+        },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $pull: { likedSongs: songId },
+        },
+        { new: true }
+      );
+      const updateLikes = song.likedBy.filter(
+        (id) => id.toString() !== userId.toString()
+      );
+   
+      return res.status(200).json({ message: "unliked successfully" });
+    } else {
+      //like
+      const updateLikes = song.likedBy;
+      updateLikes.push(userId);
+      await Song.findByIdAndUpdate(
+        songId,
+        {
+          $push: { likedBy: userId },
+        },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: { likedSongs: songId },
+        },
+        { new: true }
+      );
+     
+
+      //send Notification
+      const artistId = await Artist.findById(song.artist);
+
+      const notification = new Notification({
+        type: "like",
+        from: userId,
+        to: artistId.userID,
+      });
+     
+      await notification.save();
+
+      return res.status(200).json(updateLikes);
+    }
+  } catch (error) {
+    console.log(`Unable to like/unlike song: ${error.message}`);
+    res.status(500).json({ error: "Unable to like/unlike song" });
+  }
+};
+
 export {
   register,
   login,
@@ -271,4 +338,5 @@ export {
   getUserProfile,
   updateUserProfile,
   subscribeUnsubscribe,
+  likeUnlikeSong,
 };

@@ -5,17 +5,19 @@ import protectRoute from "../middlewares/protectRoute.js";
 import multerUpload from "../middlewares/multerFileRoute.js";
 
 import {
-  testEndPoints,
   register,
   login,
   logout,
   getMe,
   getUserProfile,
   updateUserProfile,
+  subscribeUnsubscribe,
 } from "../controllers/auth.controller.js";
 
-router.get("/testEndPoints", testEndPoints);
-router.get("/me", protectRoute, getMe); //to get user is loged in or not=> middleware
+router.post("/register", register);
+router.post("/login", login);
+router.get("/me", protectRoute, getMe);
+router.post("/logout", logout);
 router.get("/profile/:id", getUserProfile);
 router.put(
   "/profile/:id",
@@ -26,8 +28,6 @@ router.put(
   ]),
   updateUserProfile
 );
-router.post("/register", register);
-router.post("/login", login);
-router.post("/logout", logout);
+router.get("/subscribe/:id", protectRoute, subscribeUnsubscribe);
 
 export default router;

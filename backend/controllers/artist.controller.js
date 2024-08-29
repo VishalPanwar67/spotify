@@ -3,9 +3,11 @@ import { v2 as cloudinary } from "cloudinary";
 import artistGenerateTokenAndSetCookie from "../utils/artistGenerateTokenAndSetCookie.js";
 
 const register = async (req, res) => {
+  const userId = req.user._id;
   const { firstName, lastName, stageName } = req.body;
   try {
     const newArtist = new Artist({
+      userID: userId,
       firstName,
       lastName,
       stageName,

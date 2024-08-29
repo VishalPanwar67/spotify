@@ -44,14 +44,16 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Playlist",
-      // required: true,
+      default: [], // required: true,
     },
   ],
-  subscribedArtists: {
-    // We will change this to array later
-    type: String,
-    default: "",
-  },
+  subscribedArtists: [
+    {
+      type: mongoose.Schema.Types.ObjectId, // taking the following form the User model
+      ref: "Artist",
+      default: [],
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

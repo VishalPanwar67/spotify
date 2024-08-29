@@ -6,7 +6,7 @@ const artistProtectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.artisttoken;
     if (!token) {
-      return res.status(401).json({ error: "User not logged in" });
+      return res.status(401).json({ error: "Artist not logged in" });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET); //verify token

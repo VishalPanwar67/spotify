@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const artistSchema = new mongoose.Schema({
+  userID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "User ID is required"],
+  },
   firstName: {
     type: String,
     required: [true, "First name is required"],
@@ -52,6 +57,13 @@ const artistSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Album",
+    },
+  ],
+  subscriber: [
+    {
+      type: mongoose.Schema.Types.ObjectId, // taking the following form the User model
+      ref: "User",
+      default: [],
     },
   ],
 });

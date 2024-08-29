@@ -1,14 +1,7 @@
-import { User } from "../models/index.js";
+import { User, Artist } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
-
-const testEndPoints = (req, res) => {
-  //   res.json({
-  //     data: "This is the test router point",
-  //   });
-  res.send("This test end point");
-};
 
 const register = async (req, res) => {
   try {
@@ -47,8 +40,8 @@ const register = async (req, res) => {
     });
 
     if (newUser) {
-      generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
+      generateTokenAndSetCookie(newUser._id, res);
       res.status(201).json({
         _id: newUser._id,
         firstName: newUser.firstName,
@@ -65,6 +58,7 @@ const register = async (req, res) => {
       return res.status(400).json({ error: "newUser is not created" });
     }
   } catch (error) {
+    console.log(`Unable to signup: ${error.message}`);
     return res.status(500).json({ error: "Unable to signup" });
   }
 };
@@ -203,12 +197,70 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const subscribeUnsubscribe = async (req, res) => {
+  const { id } = req.params;
+  const userID = req.user._id;
+  try {
+    const artist = await Artist.findById(id);
+    if (!artist) return res.status(404).json({ error: "Artist not found" });
+    const user = await User.findById(userID);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    // console.log(
+    //   `userID: ${userID}, artistID: ${artist.userID} ${typeof userID} ${typeof artist.userID.toString()}`
+    // );
+    if (userID.toString() === artist.userID.toString()) {
+      return res.status(400).json({ error: "You can't subscribe yourself" });
+    }
+    const isSubscribed = user.subscribedArtists.includes(id);
+    if (isSubscribed) {
+      //unSubscribe
+      await Artist.findByIdAndUpdate(
+        id,
+        {
+          $pull: { subscriber: userID },
+        },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(
+        userID,
+        {
+          $pull: { subscribedArtists: id },
+        },
+        { new: true }
+      );
+      res.status(200).json({ message: "unsubscribed successfully" });
+    } else {
+      //subscribe
+      await Artist.findByIdAndUpdate(
+        id,
+        {
+          $push: { subscriber: userID },
+        },
+        { new: true }
+      );
+      await User.findByIdAndUpdate(
+        userID,
+        {
+          $push: { subscribedArtists: id },
+        },
+        { new: true }
+      );
+      res.status(200).json({ message: "subscribed successfully" });
+    }
+  } catch (error) {
+    console.log(`Unable to subscribe/unsubscribe: ${error}`);
+    res.status(500).json({ error: "Unable to subscribe/unsubscribe" });
+  }
+};
+
 export {
-  testEndPoints,
   register,
   login,
   logout,
   getMe,
   getUserProfile,
   updateUserProfile,
+  subscribeUnsubscribe,
 };
+

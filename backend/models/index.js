@@ -9,6 +9,7 @@ import Album from "./album.model.js";
 import Subscription from "./subscription.model.js";
 import Podcast from "./podcast.model.js";
 import Episode from "./episode.model.js";
+import Notification from "./notification.model.js";
 
 export {
   User,
@@ -22,4 +23,5 @@ export {
   Subscription,
   Podcast,
   Episode,
+  Notification,
 };

@@ -1,4 +1,4 @@
-import { User, Artist } from "../models/index.js";
+import { User, Artist, Notification } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";
@@ -246,6 +246,15 @@ const subscribeUnsubscribe = async (req, res) => {
         },
         { new: true }
       );
+
+      //send Notification
+      const notification = new Notification({
+        type: "subscribe",
+        from: userID,
+        to: artist.userID,
+      });
+      // console.log(`notification: ${notification}`);
+      await notification.save();
       res.status(200).json({ message: "subscribed successfully" });
     }
   } catch (error) {
@@ -263,4 +272,3 @@ export {
   updateUserProfile,
   subscribeUnsubscribe,
 };
-

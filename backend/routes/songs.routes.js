@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import artistProtectRoute from "../middlewares/artistProtectRoute.js";
-import upload from "../middlewares/multerFileRoute.js";
+import multerUpload from "../middlewares/multerFileRoute.js";
 
 import {
   createSong,
@@ -17,7 +17,13 @@ router.get("/songTestEndPoints", (req, res) => {
 router.put(
   "/createSong",
   artistProtectRoute,
-  upload.single("file"),
+  multerUpload.single("fileUrl"), // Ensure the field name matches your form
+  // (req, res, next) => {
+  //   console.log("Request body:", req.body);
+  //   console.log("Request file:", req.file); // Check if file is received
+  //   console.log("first");
+  //   next();
+  // },
   createSong
 );
 router.get("/songs", getAllSongs);

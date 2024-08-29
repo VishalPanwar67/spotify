@@ -3,11 +3,24 @@ import { v2 as cloudinary } from "cloudinary";
 import artistGenerateTokenAndSetCookie from "../utils/artistGenerateTokenAndSetCookie.js";
 
 const register = async (req, res) => {
+  const { firstName, lastName, stageName } = req.body;
   try {
-    const artist = new Artist(req.body);
-    await artist.save();
-    artistGenerateTokenAndSetCookie(artist._id, res);
-    res.status(201).json(artist);
+    const newArtist = new Artist({
+      firstName,
+      lastName,
+      stageName,
+    });
+
+    if (newArtist) {
+      artistGenerateTokenAndSetCookie(newArtist._id, res);
+      await newArtist.save();
+      res.status(201).json(newArtist);
+    } else {
+      console.log(
+        `Error in register newArtist controller funtion =>: ${error.message}`
+      );
+      return res.status(400).json({ error: "newArtist is not created" });
+    }
   } catch (error) {
     return res.status(500).json({ error: "Unable to Create Artist" });
   }

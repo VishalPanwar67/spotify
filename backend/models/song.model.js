@@ -16,7 +16,10 @@ const songSchema = new mongoose.Schema({
     required: [true, "File URL is required"],
     validate: {
       validator: function (v) {
-        return /^https?:\/\/.+\.(mp3|wav)$/.test(v); // Validates MP3 or WAV URLs
+        return (
+          /^https?:\/\/.+\.(mp3|wav)$/.test(v) ||
+          /^[A-Za-z]:\\.+\.(mp3|wav)$/.test(v)
+        );
       },
       message: (props) =>
         `${props.value} is not a valid URL for an audio file!`,

@@ -4,6 +4,7 @@ import artistRoutes from "./artist.routes.js";
 import albumRoutes from "./album.routes.js";
 import playlistRoutes from "./playlist.routes.js";
 import searchRoutes from "./search.routes.js";
+import streamRoutes from "./stream.routes.js";
 
 export {
   authRoutes,
@@ -12,4 +13,5 @@ export {
   albumRoutes,
   playlistRoutes,
   searchRoutes,
+  streamRoutes,
 };

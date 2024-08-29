@@ -1,16 +1,15 @@
 import { Song, Album } from "../models/index.js";
 import { v2 as cloudinary } from "cloudinary";
 
-import upload from "../middlewares/multerFileRoute.js";
-import path from "path";
-
 //create Songs
 const createSong = async (req, res) => {
   const artistID = req.artist._id;
+  // console.log(req.file.path);
   try {
     const { title, duration, album } = req.body;
-    // const fileUrl = req.file.path;
-    const { fileUrl } = req.body;
+    const fileUrl = req.file ? req.file.path : ""; // This will be the URL provided by Cloudinary
+    // const { fileUrl } = req.body;
+
     const song = new Song({
       title,
       duration,
@@ -21,12 +20,14 @@ const createSong = async (req, res) => {
 
     await song.save();
 
+    // Update the album with the new song
     const albumUpdate = await Album.findById(album);
     albumUpdate.songs.push(song._id);
     await albumUpdate.save();
+
     res.status(201).json(song);
   } catch (error) {
-    console.log(`Error in createSong: ${error}`);
+    console.error(`Error in createSong: ${error.message}`);
     return res.status(500).json({ error: "Unable to create song" });
   }
 };

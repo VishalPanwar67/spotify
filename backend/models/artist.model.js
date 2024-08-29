@@ -16,7 +16,7 @@ const artistSchema = new mongoose.Schema({
   },
   genre: {
     type: [String], // Multiple genres
-    required: [true, "At least one genre is required"],
+    // required: [true, "At least one genre is required"],
   },
   bio: {
     type: String,
@@ -27,7 +27,7 @@ const artistSchema = new mongoose.Schema({
     default: "",
     validate: {
       validator: function (v) {
-        return /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
+        return !v || /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
       },
       message: (props) =>
         `${props.value} is not a valid URL for an image file!`,
@@ -38,7 +38,7 @@ const artistSchema = new mongoose.Schema({
     default: "",
     validate: {
       validator: function (v) {
-        return /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
+        return !v || /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
       },
       message: (props) =>
         `${props.value} is not a valid URL for an image file!`,

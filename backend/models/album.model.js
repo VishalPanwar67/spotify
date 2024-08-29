@@ -8,15 +8,15 @@ const albumSchema = new mongoose.Schema({
   },
   releaseDate: {
     // type: Date,
-    type: Date,
+    type: String,
     required: [true, "Release date is required"],
   },
   coverImage: {
     type: String,
-    required: [true, "Cover image is required"],
+    default: "",
     validate: {
       validator: function (v) {
-        return /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
+        return !v || /^https?:\/\/.+\.(jpg|jpeg|png)$/.test(v); // Validates image URLs
       },
       message: (props) =>
         `${props.value} is not a valid URL for an image file!`,

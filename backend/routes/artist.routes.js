@@ -6,6 +6,7 @@ import multerUpload from "../middlewares/multerFileRoute.js";
 
 import {
   register,
+  artistLogin,
   registerArtistInfo,
   getArtist,
   getArtistProfile,
@@ -15,6 +16,7 @@ import {
 } from "../controllers/artist.controller.js";
 
 router.post("/register", protectRoute, register);
+router.post("/login", protectRoute, artistLogin);
 router.get("/getArtist", artistProtectRoute, getArtist);
 router.post("/artistinfo", artistProtectRoute, registerArtistInfo);
 router.get("/artistprofile/:id", getArtistProfile);

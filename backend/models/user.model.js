@@ -32,14 +32,12 @@ const userSchema = new mongoose.Schema({
   },
   likedSongs: [
     {
-      // We will change this to array later
       type: mongoose.Schema.Types.ObjectId,
       ref: "Song",
       default: "",
     },
   ],
   likedPlaylists: {
-    // We will change this to array later
     type: String,
     default: "",
   },

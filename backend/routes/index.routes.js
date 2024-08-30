@@ -6,6 +6,7 @@ import playlistRoutes from "./playlist.routes.js";
 import searchRoutes from "./search.routes.js";
 import streamRoutes from "./stream.routes.js";
 import notification from "./notification.routes.js";
+import Recomds from "./Recomds.routes.js";
 
 export {
   authRoutes,
@@ -16,4 +17,5 @@ export {
   searchRoutes,
   streamRoutes,
   notification,
+  Recomds,
 };

@@ -11,6 +11,7 @@ import {
   searchRoutes,
   streamRoutes,
   notification,
+  Recomds,
 } from "./routes/index.routes.js";
 import connectMongoDB from "./db/connectMongoDB.js";
 
@@ -45,6 +46,7 @@ app.use("/api/playlist", playlistRoutes);
 app.use("/api/search", searchRoutes);
 app.use("/api/stream", streamRoutes);
 app.use("/api/notification", notification);
+app.use("/api/recomds", Recomds);
 
 //connect to mongoDB
 connectMongoDB()

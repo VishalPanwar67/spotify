@@ -1,4 +1,4 @@
-import { User, Artist, Notification, Song } from "../models/index.js";
+  import { User, Artist, Notification, Song } from "../models/index.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
 import generateTokenAndSetCookie from "../utils/generateTokenAndSetCookie.js";

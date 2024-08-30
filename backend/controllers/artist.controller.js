@@ -27,6 +27,19 @@ const register = async (req, res) => {
     return res.status(500).json({ error: "Unable to Create Artist" });
   }
 };
+
+const artistLogin = async (req, res) => {
+  const { stageName } = req.body;
+  try {
+    const artist = await Artist.findOne({ stageName });
+    if (!artist) return res.status(404).json({ error: "Artist not found" });
+    artistGenerateTokenAndSetCookie(artist._id, res);
+    res.status(200).json(artist);
+  } catch (error) {
+    console.log(`Unable to login: ${error.message}`);
+    return res.status(500).json({ error: "Unable to artistLogin" });
+  }
+};
 const getArtist = async (req, res) => {
   try {
     // console.log("vishat " + req.artist._id);
@@ -156,6 +169,7 @@ const deleteArtist = async (req, res) => {
 
 export {
   register,
+  artistLogin,
   getArtist,
   getArtistProfile,
   registerArtistInfo,

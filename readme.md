@@ -1,4 +1,8 @@
-# $\color{#2ecc71}{\text{ Project: }}$ 01auth
+create .env file in same directory and fill the required details
+
+# $\color{red}{\text{ API }}$
+
+# $\color{#2ecc71}{\text{ Routes: }}$ 01auth
 
 ## $\color{#f8bbe6}{\text{ End-point: }}$ Register User
 
@@ -158,7 +162,7 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 02Artist
+# $\color{#2ecc71}{\text{ Routes: }}$ 02Artist
 
 ## $\color{#f8bbe6}{\text{ End-point: }}$ Resister Artist from User
 
@@ -365,7 +369,7 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 03song
+# $\color{#2ecc71}{\text{ Routes: }}$ 03song
 
 ## $\color{#f8bbe6}{\text{ End-point: }}$ Create Song
 
@@ -435,7 +439,7 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 04Album
+# $\color{#2ecc71}{\text{ Routes: }}$ 04Album
 
 ## $\color{#f8bbe6}{\text{ End-point: }}$ Create Album
 
@@ -556,7 +560,7 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 05Playlist
+# $\color{#2ecc71}{\text{ Routes: }}$ 05Playlist
 
 ## $\color{#f8bbe6}{\text{ End-point: }}$ Create Playlist
 
@@ -683,7 +687,7 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 06notifications
+# $\color{#2ecc71}{\text{ Routes: }}$ 06notifications
 
 ## $\color{#f8bbe6}{\text{ End-point: }}$ Get All Notification
 
@@ -707,9 +711,9 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 07recommendations
+# $\color{#2ecc71}{\text{ Routes: }}$ 07recommendations
 
-## $\color{#f8bbe6}{\text{ End-point: }}$Recommendations of the song by Mutual User liked Songs
+## $\color{#f8bbe6}{\text{ End-point: }}$ Recommendations of the song by Mutual User liked Songs
 
 ### $\color{#d3e667}{\text{ Method:}}$ Get
 
@@ -719,9 +723,9 @@
 
 ---
 
-# $\color{#2ecc71}{\text{ Project: }}$ 08Other
+# $\color{#2ecc71}{\text{ Routes: }}$ 08Other
 
-## $\color{#f8bbe6}{\text{ End-point: }}$Search
+## $\color{#f8bbe6}{\text{ End-point: }}$ Search
 
 ### $\color{#d3e667}{\text{ Method:}}$ Get
 
@@ -731,7 +735,7 @@
 
 ---
 
-## $\color{#f8bbe6}{\text{ End-point: }}$stream_ID
+## $\color{#f8bbe6}{\text{ End-point: }}$ stream_ID
 
 ### $\color{#d3e667}{\text{ Method:}}$ Get
 
